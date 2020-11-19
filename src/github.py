@@ -129,4 +129,19 @@ def find_stargazzers_from_repo(owner: str, repo: str, uname: str = "") -> List[s
     return contributors
 
 
+def get_profile_info_from_user(username: str, uname: str = ""):
+    """
+    >>> get_profile_info_from_user("gauthamzz")
+    {'name': 'Gautham Santhosh', 'company': None, 'location': 'Berlin', 'blog': 'gauthamsanthosh.com', 'twitter_username': 'gauthamzzz'}
+    """
+    response = get(
+        f"https://api.github.com/users/{username}", auth=HTTPBasicAuth(uname, ""),
+    ).json()
 
+    return {
+        "name": response["name"],
+        "company": response["company"],
+        "location": response["location"],
+        "blog": response["blog"],
+        "twitter_username": response["twitter_username"],
+    }
