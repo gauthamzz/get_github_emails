@@ -114,3 +114,19 @@ def find_users_from_organisation(organisation: str, uname: str = ""):
     ).text
     members = re.findall(r'"login":"(.*?)"', response)
     return members
+
+
+def find_stargazzers_from_repo(owner: str, repo: str, uname: str = "") -> List[str]:
+    """
+    >>> find_stargazzers_from_repo("gauthamzz", "hazel")
+    ['mubaris', 'AviBomb', 'SOHELAHMED7', 'ananya', 'todun', 'klonggan', 'x0rzkov', 'aryan-harsh', 'shalusinha1411']
+    """
+    response = get(
+        f"https://api.github.com/repos/{owner}/{repo}/stargazers?per_page=100",
+        auth=HTTPBasicAuth(uname, ""),
+    ).text
+    contributors = re.findall(r'https://github\.com/(.*?)"', response)
+    return contributors
+
+
+
