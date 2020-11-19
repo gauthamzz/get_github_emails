@@ -1,5 +1,5 @@
 import typer
-from src import github, utils
+from src import github
 
 app = typer.Typer()
 
