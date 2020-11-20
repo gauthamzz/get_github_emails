@@ -38,6 +38,16 @@ def repo(owner: str, repo: str, uname: str = ""):
     """
     typer.echo(github.find_emails_from_repo(username=owner, repo=repo, uname=uname))
 
+@app.command()
+def stargazzers(owner: str, repo: str, uname: str = ""):
+    """
+    returns list of people who starred this repo
+    """
+    usernames = github.find_stargazzers_from_repo(owner=owner, repo=repo, uname=uname)
+    result = []
+    for username in usernames:
+        result.append(github.find_email_from_username(username=username))
+    typer.echo(result)
 
 if __name__ == "__main__":
     app()
