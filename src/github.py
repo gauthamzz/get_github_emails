@@ -1,5 +1,6 @@
 import re
 from typing import List
+from collections import Counter
 
 from requests import get
 from requests.auth import HTTPBasicAuth
@@ -37,6 +38,35 @@ def find_repos_from_owner(owner: str, uname: str = "") -> List[str]:
         if repo[1] == "false":
             nonForkedRepos.append(repo[0])
     return nonForkedRepos
+
+
+def find_email_from_events(username: str, breach: bool = False, uname: str = "") -> str:
+    """
+    >>> find_email_from_events("mubaris")
+    'hello@mubaris.com'
+    """
+
+    def most_frequent(List):
+        if List == []:
+            return
+        occurence_count = Counter(List)
+        return occurence_count.most_common(1)[0][0]
+
+    response = get(
+        f"https://api.github.com/users/{username}/events",
+        auth=HTTPBasicAuth(uname, ""),
+    ).text
+    emails = re.findall(r'"email":"(.*?)"', response)
+    email = most_frequent(emails)
+    if breach:
+        if (
+            get(
+                f"https://haveibeenpwned.com/api/v2/breachedaccount/{email}"
+            ).status_code
+            == HTTP_SUCCESS
+        ):
+            email = f"{email}[pwned]"
+    return email
 
 
 def find_email_from_contributor(
@@ -78,6 +108,9 @@ def find_email_from_username(username: str, uname: str = "") -> str:
     >>> find_email_from_username("gauthamzz")
     'gauthamzz : thabeatsz@gmail.com'
     """
+    email = find_email_from_events(username=username, breach=True, uname=uname)
+    if email:
+        return email
     repos = find_repos_from_owner(owner=username)
     for repo in repos:
         email = find_email_from_contributor(
@@ -95,9 +128,7 @@ def find_emails_from_repo(username: str, repo: str, uname: str = ""):
     user_emails = {}
     contributors = find_contributors_from_repo(owner=username, repo=repo)
     for contributor in contributors:
-        email = find_email_from_contributor(
-            username=username, repo=repo, contributor=contributor, uname=uname
-        )
+        email = find_email_from_events(username=username, breach=True, uname=uname)
         if email:
             user_emails[contributor] = email
     return user_emails
