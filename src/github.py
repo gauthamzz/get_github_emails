@@ -43,7 +43,7 @@ def find_repos_from_owner(owner: str, uname: str = "") -> List[str]:
 def find_email_from_events(username: str, breach: bool = False, uname: str = "") -> str:
     """
     >>> find_email_from_events("mubaris")
-    'hello@mubaris.com'
+    { "mubaris" : "hello@mubaris.com"}
     """
 
     def most_frequent(List):
@@ -66,7 +66,7 @@ def find_email_from_events(username: str, breach: bool = False, uname: str = "")
             == HTTP_SUCCESS
         ):
             email = f"{email}[pwned]"
-    return email
+    return { username: email }
 
 
 def find_email_from_contributor(
@@ -128,7 +128,7 @@ def find_emails_from_repo(username: str, repo: str, uname: str = ""):
     user_emails = {}
     contributors = find_contributors_from_repo(owner=username, repo=repo)
     for contributor in contributors:
-        email = find_email_from_events(username=username, breach=True, uname=uname)
+        email = find_email_from_username(username=username, uname=uname)
         if email:
             user_emails[contributor] = email
     return user_emails
