@@ -108,16 +108,16 @@ def find_email_from_username(username: str, uname: str = "") -> str:
     >>> find_email_from_username("gauthamzz")
     'gauthamzz : thabeatsz@gmail.com'
     """
-    email = find_email_from_events(username=username, breach=True, uname=uname)
-    if email:
-        return email
+    response = find_email_from_events(username=username, breach=True, uname=uname)
+    if response[username]:
+        return response
     repos = find_repos_from_owner(owner=username)
     for repo in repos:
         email = find_email_from_contributor(
             username=username, repo=repo, contributor=username, uname=uname
         )
         if email:
-            return username + " : " + email
+            return { username + "*" : email} 
 
 
 def find_emails_from_repo(username: str, repo: str, uname: str = ""):
