@@ -106,7 +106,7 @@ def find_email_from_contributor(
 def find_email_from_username(username: str, uname: str = "") -> str:
     """
     >>> find_email_from_username("gauthamzz")
-    {'gauthamzz : thabeatsz@gmail.com'}
+    {'gauthamzz' : 'thabeatsz@gmail.com'}
     """
     response = find_email_from_events(username=username, breach=True, uname=uname)
     if response[username]:
