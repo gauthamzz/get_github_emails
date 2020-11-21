@@ -1,5 +1,5 @@
 import typer
-from src import github
+from src import github, utils
 from typing import Optional
 
 app = typer.Typer()
@@ -43,15 +43,24 @@ def repo(owner: str, repo: str, uname: Optional[str] = typer.Argument(None)):
 
 
 @app.command()
-def stargazzers(owner: str, repo: str, uname: Optional[str] = typer.Argument(None)):
+def stargazzers(
+    owner: str,
+    repo: str,
+    info: bool = False,
+    uname: Optional[str] = typer.Argument(None),
+):
     """
     returns list of people who starred this repo
+    --info to get info of user
     """
     usernames = github.find_stargazzers_from_repo(owner=owner, repo=repo, uname=uname)
-    result = []
+    results = []
     for username in usernames:
-        result.append(github.find_email_from_username(username=username))
-    typer.echo(result)
+        results.append(github.find_email_from_username(username=username))
+    if not info:
+        return typer.echo(results)
+
+    typer.echo(utils.get_info_for_usernames(results=results, uname=uname))
 
 
 @app.command()

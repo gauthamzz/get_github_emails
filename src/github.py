@@ -66,7 +66,7 @@ def find_email_from_events(username: str, breach: bool = False, uname: str = "")
             == HTTP_SUCCESS
         ):
             email = f"{email}[pwned]"
-    return { username: email }
+    return {username: email}
 
 
 def find_email_from_contributor(
@@ -117,7 +117,7 @@ def find_email_from_username(username: str, uname: str = "") -> str:
             username=username, repo=repo, contributor=username, uname=uname
         )
         if email:
-            return { username + "*" : email} 
+            return {username : email}
 
 
 def find_emails_from_repo(username: str, repo: str, uname: str = ""):
