@@ -13,7 +13,9 @@ def contributors(owner: str, repo: str, uname: Optional[str] = typer.Argument(No
 
 
 @app.command()
-def org(organisation: str, threads: int = 2, uname: Optional[str] = typer.Argument(None)):
+def org(
+    organisation: str, threads: int = 2, uname: Optional[str] = typer.Argument(None)
+):
     """Get list of users of an Organisation
     """
     usernames = github.find_users_from_organisation(
@@ -39,8 +41,9 @@ def repo(owner: str, repo: str, uname: Optional[str] = typer.Argument(None)):
     """
     typer.echo(github.find_emails_from_repo(username=owner, repo=repo, uname=uname))
 
+
 @app.command()
-def stargazzers(owner: str, repo: str,  uname: Optional[str] = typer.Argument(None)):
+def stargazzers(owner: str, repo: str, uname: Optional[str] = typer.Argument(None)):
     """
     returns list of people who starred this repo
     """
@@ -49,6 +52,12 @@ def stargazzers(owner: str, repo: str,  uname: Optional[str] = typer.Argument(No
     for username in usernames:
         result.append(github.find_email_from_username(username=username))
     typer.echo(result)
+
+
+@app.command()
+def info(username: str, uname: Optional[str] = typer.Argument(None)):
+    typer.echo(github.get_profile_info_from_user(username=username, uname=uname))
+
 
 if __name__ == "__main__":
     app()
